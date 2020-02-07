@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "epidemic-mgr.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  hosts:
+  - "{{ include "epidemic-mgr.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
+  - "{{ .Values.hostName }}"
+  gateways:
+  - mesh
+  - {{ .Values.gateway }}
+  http:
+  - route:
+    - destination:
+        host: "{{ include "epidemic-mgr.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
+        subset: v1
